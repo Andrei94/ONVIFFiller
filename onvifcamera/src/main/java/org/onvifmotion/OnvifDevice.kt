@@ -1,22 +1,22 @@
-package com.rvirin.onvif.onvifcamera
+package org.onvifmotion
 
 
 import android.os.AsyncTask
 import android.util.Log
-import com.rvirin.onvif.onvifcamera.OnvifDeviceInformation.Companion.deviceInformationCommand
-import com.rvirin.onvif.onvifcamera.OnvifDeviceInformation.Companion.deviceInformationToString
-import com.rvirin.onvif.onvifcamera.OnvifDeviceInformation.Companion.parseDeviceInformationResponse
-import com.rvirin.onvif.onvifcamera.OnvifMediaProfiles.Companion.getProfilesCommand
-import com.rvirin.onvif.onvifcamera.OnvifMediaStreamURI.Companion.getStreamURICommand
-import com.rvirin.onvif.onvifcamera.OnvifMediaStreamURI.Companion.parseStreamURIXML
-import com.rvirin.onvif.onvifcamera.OnvifServices.Companion.servicesCommand
-import com.rvirin.onvif.onvifcamera.OnvifXMLBuilder.envelopeEnd
-import com.rvirin.onvif.onvifcamera.OnvifXMLBuilder.soapHeader
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okio.Buffer
+import org.onvifmotion.OnvifDeviceInformation.Companion.deviceInformationCommand
+import org.onvifmotion.OnvifDeviceInformation.Companion.deviceInformationToString
+import org.onvifmotion.OnvifDeviceInformation.Companion.parseDeviceInformationResponse
+import org.onvifmotion.OnvifMediaProfiles.Companion.getProfilesCommand
+import org.onvifmotion.OnvifMediaStreamURI.Companion.getStreamURICommand
+import org.onvifmotion.OnvifMediaStreamURI.Companion.parseStreamURIXML
+import org.onvifmotion.OnvifServices.Companion.servicesCommand
+import org.onvifmotion.OnvifXMLBuilder.envelopeEnd
+import org.onvifmotion.OnvifXMLBuilder.soapHeader
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 

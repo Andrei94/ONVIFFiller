@@ -1,19 +1,15 @@
-package com.rvirin.onvif.demo
+package org.onvifmotion
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.rvirin.onvif.R
-import com.rvirin.onvif.onvifcamera.OnvifDevice
-import com.rvirin.onvif.onvifcamera.OnvifListener
-import com.rvirin.onvif.onvifcamera.OnvifRequest.Type.*
-import com.rvirin.onvif.onvifcamera.OnvifResponse
-import com.rvirin.onvif.onvifcamera.currentDevice
+import org.onvifmotion.OnvifRequest.Type.*
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -21,15 +17,13 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Scalar
 
-const val RTSP_URL = "com.rvirin.onvif.onvifcamera.demo.RTSP_URL"
+const val RTSP_URL = "org.onvifmotion.RTSP_URL"
 
 /**
  * Main activity of this demo project. It allows the user to type his camera IP address,
  * login and password.
  */
-class MainActivity : Activity(), OnvifListener {
-
-    private var toast: Toast? = null
+class MainActivity : AppCompatActivity(), OnvifListener {
 
     private val mLoaderCallback = object : BaseLoaderCallback(this) {
         override fun onManagerConnected(status: Int) {
@@ -91,12 +85,9 @@ class MainActivity : Activity(), OnvifListener {
 
         Log.d("INFO", response.parsingUIMessage)
 
-        toast?.cancel()
-
         if (!response.success) {
             Log.e("ERROR", "request failed: ${response.request.type} \n Response: ${response.error}")
-            toast = Toast.makeText(this, "⛔️ Request failed: ${response.request.type}", Toast.LENGTH_SHORT)
-            toast?.show()
+            toast("⛔️ Request failed: ${response.request.type}")
         }
         // if GetServices have been completed, we request the device information
         else if (response.request.type == GetServices) {
@@ -107,17 +98,14 @@ class MainActivity : Activity(), OnvifListener {
 
             val textView = findViewById<TextView>(R.id.explanationTextView)
             textView.text = response.parsingUIMessage
-            toast = Toast.makeText(this, "Device information retrieved 👍", Toast.LENGTH_SHORT)
-            toast?.show()
-
+            toast("Device information retrieved 👍")
             currentDevice.getProfiles()
 
         }
         // if GetProfiles have been completed, we request the Stream URI
         else if (response.request.type == GetProfiles) {
             val profilesCount = currentDevice.mediaProfiles.count()
-            toast = Toast.makeText(this, "$profilesCount profiles retrieved 😎", Toast.LENGTH_SHORT)
-            toast?.show()
+            toast("$profilesCount profiles retrieved 😎")
 
             currentDevice.getStreamURI()
 
@@ -128,8 +116,7 @@ class MainActivity : Activity(), OnvifListener {
             val button = findViewById<TextView>(R.id.button)
             button.text = getString(R.string.Play)
 
-            toast = Toast.makeText(this, "Stream URI retrieved,\nready for the movie 🍿", Toast.LENGTH_SHORT)
-            toast?.show()
+            toast("Stream URI retrieved,\nready for the movie 🍿")
         }
     }
 
@@ -144,7 +131,7 @@ class MainActivity : Activity(), OnvifListener {
                 }
                 startActivity(intent)
             } ?: run {
-                Toast.makeText(this, "RTSP URI haven't been retrieved", Toast.LENGTH_SHORT).show()
+                toast("RTSP URI haven't been retrieved")
             }
         } else {
 
@@ -163,12 +150,10 @@ class MainActivity : Activity(), OnvifListener {
                 currentDevice.getServices()
 
             } else {
-                toast?.cancel()
-                toast = Toast.makeText(this,
-                        "Please enter an IP Address login and password",
-                        Toast.LENGTH_SHORT)
-                toast?.show()
+                toast("Please enter an IP Address login and password")
             }
         }
     }
+
+    private fun toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }

@@ -1,4 +1,4 @@
-package com.rvirin.onvif.onvifcamera
+package org.onvifmotion
 
 import android.util.Log
 import org.apache.commons.codec.digest.MessageDigestAlgorithms

@@ -1,7 +1,7 @@
-package com.rvirin.onvif.demo
+package org.onvifmotion
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceView
 import android.view.View
 import android.widget.Button
