@@ -144,11 +144,6 @@ class OnvifDevice(val ipAddress: String, @JvmField val username: String, @JvmFie
         }
     }
 
-    fun getStreamURI(profile: MediaProfile) {
-        val request = OnvifRequest(getStreamURICommand(profile), OnvifRequest.Type.GetStreamURI)
-        ONVIFcommunication().execute(request)
-    }
-
     /**
      * Communication in Async Task between Android and ONVIF camera
      */

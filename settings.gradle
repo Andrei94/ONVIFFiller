@@ -1,1 +1,1 @@
-include ':app', ':onvifcamera', ':opencv'
+include ':app', ':onvifcamera'
