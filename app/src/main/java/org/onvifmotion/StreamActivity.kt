@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.pedro.vlc.VlcListener
 import com.pedro.vlc.VlcVideoLibrary
-import com.rvirin.onvif.R
+import kotlinx.android.synthetic.main.activity_stream.*
 
 /**
  * This activity helps us to show the live stream of an ONVIF camera thanks to VLC library.
@@ -56,12 +56,12 @@ class StreamActivity : AppCompatActivity(), VlcListener, View.OnClickListener {
             if (!vlcVideoLibrary.isPlaying) {
                 val url = intent.getStringExtra(RTSP_URL)
                 vlcVideoLibrary.play(url)
+                b_start_stop.text = getString(R.string.stopPlayer)
             } else {
                 vlcVideoLibrary.stop()
+                b_start_stop.text = getString(R.string.startPlayer)
             }
         }
     }
-
-
 }
 

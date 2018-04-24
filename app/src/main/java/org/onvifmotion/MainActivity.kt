@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.rvirin.onvif.R
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -16,28 +15,20 @@ import java.io.FileNotFoundException
 
 const val RTSP_URL = "org.onvifmotion.RTSP_URL"
 
-/**
- * Main activity of this demo project. It allows the user to type his camera IP address,
- * login and password.
- */
 class MainActivity : AppCompatActivity(), OnvifListener {
+    private val separator = "<!^^!>"
+    private val storageFile = "cameras.data"
 
-    var logins: List<String>? = null
+    private var logins: List<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         try {
-            logins = File(filesDir, "cameras.data").readLines()
+            logins = File(filesDir, storageFile).readLines()
         } catch (ex: FileNotFoundException) {
         }
-    }
-
-    private fun setCredentials(parts: List<String>) {
-        ipAddress.setText(parts[0])
-        login.setText(parts[1])
-        password.setText(parts[2])
     }
 
     override fun requestPerformed(response: OnvifResponse) {
@@ -70,19 +61,23 @@ class MainActivity : AppCompatActivity(), OnvifListener {
         var selectedItem: Int = -1
         AlertDialog.Builder(this)
                 .setTitle("Saved Logins")
-                .setSingleChoiceItems(logins!!.map { it.split("<!^^!>")[0] }.toTypedArray(), selectedItem, { dialog: DialogInterface, which: Int -> selectedItem = which })
-                .setPositiveButton("OK", { dialog, which ->
+                .setSingleChoiceItems(logins!!.map { it.split(separator)[0] }.toTypedArray(), selectedItem, { _: DialogInterface, which: Int -> selectedItem = which })
+                .setPositiveButton("OK", { _, _ ->
                     run {
                         if (selectedItem >= 0)
-                            setCredentials(logins!![selectedItem].split("<!^^!>"))
+                            setCredentials(logins!![selectedItem].split(separator))
                     }
                 })
-                .setNegativeButton("Cancel", { dialog, which ->
-                    run {
-                        dialog.dismiss()
-                    }
+                .setNegativeButton("Cancel", { dialog, _ ->
+                    dialog.dismiss()
                 })
                 .show()
+    }
+
+    private fun setCredentials(parts: List<String>) {
+        ipAddress.setText(parts[0])
+        login.setText(parts[1])
+        password.setText(parts[2])
     }
 
     fun buttonClicked(view: View) {
@@ -98,10 +93,7 @@ class MainActivity : AppCompatActivity(), OnvifListener {
                 toast("RTSP URI haven't been retrieved")
             }
         } else {
-            if (ipAddress.text.isNotEmpty() &&
-                    login.text.isNotEmpty() &&
-                    password.text.isNotEmpty()) {
-
+            if (areCredentialsFilled()) {
                 // Create ONVIF device with user inputs and retrieve camera informations
                 currentDevice = OnvifDevice(ipAddress.text.toString(), login.text.toString(), password.text.toString())
                 currentDevice.listener = this
@@ -114,29 +106,32 @@ class MainActivity : AppCompatActivity(), OnvifListener {
     }
 
     fun saveLogin(view: View) {
-        if (ipAddress.text.isEmpty() &&
-                login.text.isEmpty() &&
-                password.text.isEmpty()) {
-            toast("Please fill the IP Address, login and password")
-        } else {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Save login")
+        if (areCredentialsFilled()) {
+            AlertDialog.Builder(this).setTitle("Save login")
                     .setMessage("Do you want to save the camera login?")
-                    .setPositiveButton("Yes", { dialog, which ->
+                    .setPositiveButton("Yes", { _, _ ->
                         run {
                             saveToFile()
                             toast("Login Saved")
                         }
                     })
-                    .setNegativeButton("No", { dialog, which -> toast("Login not saved") })
+                    .setNegativeButton("No", { _, _ -> toast("Login not saved") })
                     .show()
+        } else {
+            toast("Please fill the IP Address, login and password")
         }
     }
 
-    private fun saveToFile() {
-        val serializedData = ipAddress.text.toString() + "<!^^!>" + login.text.toString() + "<!^^!>" + password.text.toString()
-        File(filesDir, "cameras.data").writeText(serializedData)
+    private fun areCredentialsFilled(): Boolean {
+        return ipAddress.text.isNotEmpty() &&
+                login.text.isNotEmpty() &&
+                password.text.isNotEmpty()
     }
 
     private fun toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+
+    private fun saveToFile() {
+        val serializedData = ipAddress.text.toString() + separator + login.text.toString() + separator + password.text.toString()
+        File(filesDir, storageFile).writeText(serializedData)
+    }
 }

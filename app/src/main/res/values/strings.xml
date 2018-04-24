@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">ONVIFCamera-Android</string>
-    <string name="start_player">Start Player</string>
+    <string name="app_name">ONVIFFiller</string>
+    <string name="startPlayer">Start Player</string>
+    <string name="stopPlayer">Stop Player</string>
     <string name="LoadLogins">View camera logins</string>
     <string name="Connect">Connect to camera</string>
     <string name="SaveLogin">Save camera login</string>
@@ -8,8 +9,7 @@
     <string name="getting_profiles">Getting profiles…</string>
     <string name="getting_stream_uri">Getting streaming URI…</string>
     <string name="Play">Play Stream</string>
-    <string name="ip_address">IP Address</string>
+    <string name="ipAddress">IP Address</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-
 </resources>
